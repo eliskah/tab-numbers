@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+
+  "name": "Numbered Tabs",
+  "description": "See order of your open tabs to navigate easily",
+  "version": "0.1",
+
+  "permissions": [
+    "activeTab"
+  ],
+  "browser_action": {
+    "default_title": "Number tabs!"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  }
+}
