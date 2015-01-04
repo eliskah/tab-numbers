@@ -1,13 +1,16 @@
 var separator = "] "
 
 function indexTitle(tab) {
+
   var index = tab.index
   var title = tab.title
   var start = title.indexOf(separator) > -1 ? (title.indexOf(separator) + separator.length) : -1
-  
-  if (index > 8) { return "...".concat(separator, title) }
-  return "".concat((index+1).toString(), separator, title.substring(start))
+  var originalTitle = title.substring(start)
 
+  if (start != -1) { return originalTitle}
+  if (index > 8) { return "...".concat(separator, title) }
+
+  return "".concat((index+1).toString(), separator, originalTitle)
 }
 
 function tabs() {
