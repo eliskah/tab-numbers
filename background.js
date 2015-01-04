@@ -15,7 +15,7 @@ function indexTitle(tab) {
 
 function tabs() {
 
-  chrome.tabs.query({windowId: -2}, function(tabs) {
+  chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
 
     for (var i = 0; i < tabs.length; i++) {
       if (tabs[i] != null)
