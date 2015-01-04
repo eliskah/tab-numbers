@@ -18,14 +18,14 @@ function tabs() {
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
 
     for (var i = 0; i < tabs.length; i++) {
-      if (tabs[i] != null)
-        chrome.tabs.executeScript(tabs[i].id, { file: 'fetch_title.js' }, function(response, i) {
-          chrome.runtime.onMessage.addListener(function(document, i) {
-            chrome.tabs.executeScript(i.tab.id, { code: "document.title=".concat('"', indexTitle(i.tab), '"') } )
-          })
-        })
+      if (tabs[i].url.lastIndexOf("chrome://") != 0) {
+        chrome.tabs.executeScript(tabs[i].id, { code: chrome.runtime.sendMessage({'title': document.title, 'tab': tabs[i]}) })
+      }
     }
   })
 }
 
 chrome.commands.onCommand.addListener(function(command) { tabs() })
+chrome.runtime.onMessage.addListener(function(message, sender) {
+  chrome.tabs.executeScript(message.tab.id, { code: "document.title=".concat('"', indexTitle(message.tab, total), '"') } )
+})
