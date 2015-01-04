@@ -21,11 +21,5 @@
       },
       "description": "Triggers title change"
     }
-  },
-   "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js" : ["fetch_title.js"]
-    }
-  ]
+  }
 }
