@@ -1,6 +1,7 @@
 var separator = "] "
+var total = 0
 
-function indexTitle(tab) {
+function indexTitle(tab, max) {
 
   var index = tab.index
   var title = tab.title
@@ -8,15 +9,14 @@ function indexTitle(tab) {
   var originalTitle = title.substring(start)
 
   if (start != -1) { return originalTitle}
-  if (index > 8) { return "...".concat(separator, title) }
-
-  return "".concat((index+1).toString(), separator, originalTitle)
+    else if (index > 7 && index == max-1) { return "9".concat(separator, title) }
+    else if (index > 7) { return "...".concat(separator, title) }
+    else {return "".concat((index+1).toString(), separator, originalTitle)}
 }
 
 function tabs() {
-
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
-
+    total = tabs.length
     for (var i = 0; i < tabs.length; i++) {
       if (tabs[i].url.lastIndexOf("chrome://") != 0) {
         chrome.tabs.executeScript(tabs[i].id, { code: chrome.runtime.sendMessage({'title': document.title, 'tab': tabs[i]}) })
