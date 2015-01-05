@@ -1,5 +1,6 @@
 var separator = "] "
 var total = 0
+var enabled = true
 
 function indexTitle(tab, max) {
 
@@ -8,8 +9,9 @@ function indexTitle(tab, max) {
   var start = title.indexOf(separator) > -1 ? (title.indexOf(separator) + separator.length) : -1
   var originalTitle = title.substring(start)
 
-  if (start != -1) { return originalTitle}
-    else if (index > 7 && index == max-1) { return "9".concat(separator, title) }
+  if (enabled == false) { return originalTitle }
+
+  if (index > 7 && index == max-1) { return "9".concat(separator, title) }
     else if (index > 7) { return "...".concat(separator, title) }
     else {return "".concat((index+1).toString(), separator, originalTitle)}
 }
@@ -25,7 +27,14 @@ function tabs() {
   })
 }
 
-chrome.commands.onCommand.addListener(function(command) { tabs() })
+chrome.commands.onCommand.addListener(function(command) { 
+  enabled = true
+  tabs()
+})
+chrome.tabs.onActivated.addListener(function(tab) { 
+  enabled = false
+  tabs()
+})
 chrome.runtime.onMessage.addListener(function(message, sender) {
   chrome.tabs.executeScript(message.tab.id, { code: "document.title=".concat('"', indexTitle(message.tab, total), '"') } )
 })
