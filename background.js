@@ -20,7 +20,7 @@ function tabs() {
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
     total = tabs.length
     for (var i = 0; i < tabs.length; i++) {
-      if (tabs[i].url.lastIndexOf("chrome://") != 0) {
+      if (tabs[i].url.lastIndexOf("chrome") != 0) {
         chrome.tabs.executeScript(tabs[i].id, { code: chrome.runtime.sendMessage({'title': document.title, 'tab': tabs[i]}) })
       }
     }
