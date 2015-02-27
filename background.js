@@ -2,10 +2,8 @@ var separator = "] "
 var total = 0
 var enabled = true
 
-function indexTitle(tab, max) {
+function indexTitle(index, title, max) {
 
-  var index = tab.index
-  var title = tab.title
   var start = title.indexOf(separator) > -1 ? (title.indexOf(separator) + separator.length) : -1
   var originalTitle = title.substring(start)
 
@@ -20,12 +18,12 @@ function tabs() {
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
     total = tabs.length
     for (var i = 0; i < tabs.length; i++) {
-      if (tabs[i].url.lastIndexOf("chrome") != 0) {
-        chrome.tabs.executeScript(tabs[i].id, { code: chrome.runtime.sendMessage({'title': document.title, 'tab': tabs[i]}) })
+      if (tabs[i].url.lastIndexOf("chrome://") != 0) { 
+        chrome.tabs.executeScript(tabs[i].id, { code: "chrome.runtime.sendMessage({'index': ".concat(tabs[i].index, ", 'id': ", tabs[i].id, ", 'title': '", tabs[i].title, "' })") })
       }
     }
-  })
-}
+  }
+)}
 
 chrome.commands.onCommand.addListener(function(command) { 
   enabled = true
@@ -36,5 +34,5 @@ chrome.tabs.onActivated.addListener(function(tab) {
   tabs()
 })
 chrome.runtime.onMessage.addListener(function(message, sender) {
-  chrome.tabs.executeScript(message.tab.id, { code: "document.title=".concat('"', indexTitle(message.tab, total), '"') } )
+  chrome.tabs.executeScript(message.id, { code: "document.title=".concat('"', indexTitle(message.index, message.title, total), '"') } )
 })
