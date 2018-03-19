@@ -25,3 +25,5 @@ Once the extension is installed and you have some tabs open, press Alt+T. Titles
 * When focus is on new tab, activating of the function is not working.
 
 After you navigate to any other tab (using CMD/CTRL+index or by clicking), indexes are removed from the title.
+
+If you want to use different keyboard shortcut, navigate to `chrome://extensions/configureCommands` and set it as you like.
