@@ -10,10 +10,14 @@ function indexTitle(index, title, max) {
   if (enabled == false) { return originalTitle }
 
     if (index > 7 && index == max-1) { 
-        return "9".concat(separator, title) 
+        return "".concat("9".toString(), separator, originalTitle)
     }
     else if (index > 7) { 
-        return "...".concat(separator, title) 
+        if(title[0] === "9" && title[1] === "]"){
+            return title.substring(2);
+        } else{
+            return title;
+        }
     }
     else {
         return "".concat((index+1).toString(), separator, originalTitle)
@@ -24,8 +28,9 @@ function isValid(url) {
   valid = true
   prefixes = ["chrome://", "about:", "view-source:"]
   for (var i = 0; i < prefixes.length; i++) 
-    { if (url.lastIndexOf(prefixes[i]) == 0) 
-        { valid = false }
+    { if (url.lastIndexOf(prefixes[i]) == 0) {
+        valid = false 
+      }
     }
   return valid
 }
