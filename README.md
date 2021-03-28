@@ -14,6 +14,8 @@ Clone the repository:
 
     $ https://github.com/ankitpal1029/tab-numbers.git
 
+![Preview of tab-numbers in Chrome](./images/enable.png)
+
 In your Chromium Browser of Choice, go to extensions settings 
 (`settings > extensions` or go to `chrome://extensions`). 
 Make sure you have checked developer mode, then `Load unpacked extension..` and 
