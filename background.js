@@ -24,22 +24,10 @@ function indexTitle(index, title, max) {
     }
 }
 
-function isValid(url) {
-  valid = true
-  prefixes = ["chrome://", "about:", "view-source:"]
-  for (var i = 0; i < prefixes.length; i++) 
-    { if (url.lastIndexOf(prefixes[i]) == 0) {
-        valid = false 
-      }
-    }
-  return valid
-}
-
 function tabs() {
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
     total = tabs.length
     for (var i = 0; i < tabs.length; i++) {
-      //if (isValid(tabs[i].url)) {
      chrome.tabs.executeScript(tabs[i].id, 
          { code: "chrome.runtime.sendMessage({'index': ".concat(tabs[i].index, 
              ", 'id': ", 
@@ -47,46 +35,29 @@ function tabs() {
              ", 'title': '", 
              tabs[i].title, 
              "' })") })
-      //}
     }
   }
 )}
 
-chrome.commands.onCommand.addListener(function(command) { 
+function callbackTab(tab){
     if(enabled){
-        enabled = false;
-    } else{
         enabled = true;
+        tabs()
     }
+}
+
+chrome.commands.onCommand.addListener(function(command) { 
+  enabled = enabled ? false : true;
   tabs()
 })
 
-chrome.tabs.onUpdated.addListener(function(tab) { 
-  if (enabled) {
-    enabled = true
-    tabs()
-  }
-})
-chrome.tabs.onActivated.addListener(function(tab) { 
-  if (enabled) {
-    enabled = true
-    tabs()
-  }
-})
+chrome.tabs.onUpdated.addListener((tab) => callbackTab(tab));
 
-chrome.tabs.onRemoved.addListener(function(tab) { 
-  if (enabled) {
-    enabled = true
-    tabs()
-  }
-})
+chrome.tabs.onActivated.addListener((tab) => callbackTab(tab));
 
-chrome.tabs.onMoved.addListener(function(tab) { 
-  if (enabled) {
-    enabled = true
-    tabs()
-  }
-})
+chrome.tabs.onRemoved.addListener((tab) => callbackTab(tab));
+
+chrome.tabs.onMoved.addListener((tab) => callbackTab(tab));
 
 
 
