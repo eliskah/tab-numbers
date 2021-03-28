@@ -1,21 +1,23 @@
 # Chrome Extension tab-numbers
 
-If you are used to **switch between open tabs in Google Chrome** using CMD/CTRL+number of tab (eg. `CMD+4` for tab number 4), you are probably tired of visually counting the tabs you want to switch to. This is what you'll get:
+If you are used to **switch between open tabs in Google Chrome** using CMD/CTRL/ALT+number
+of tab (eg. `CMD+4` for tab number 4), you are probably tired of visually counting the tabs
+you want to switch to. This is what you'll get:
 
-![Preview of tab-numbers in Chrome](https://github.com/eliskah/tab-numbers/blob/master/preview.png)
+![Preview of tab-numbers in Chrome](./images/view.png)
 
-* Press `ALT+T` to see number of each tab.
-* When you jump there, numbers are removed to free space for original title.
+* Press `ALT+T` to toggle this extension on/off. 
 
 ## Installation
 
 Clone the repository:
 
-    $ git clone https://github.com/eliskah/tab-numbers.git
+    $ https://github.com/ankitpal1029/tab-numbers.git
 
-![Add tab-numbers to Chrome](https://github.com/eliskah/tab-numbers/blob/master/enable.png)
-
-In Google Chrome, go to extensions settings (`settings > extensions` or go to `chrome://extensions`). Make sure you have checked developer mode, then `Load unpacked extension..` and navigate to the extension folder.
+In your Chromium Browser of Choice, go to extensions settings 
+(`settings > extensions` or go to `chrome://extensions`). 
+Make sure you have checked developer mode, then `Load unpacked extension..` and 
+navigate to the extension folder.
 
 ## Usage
 
