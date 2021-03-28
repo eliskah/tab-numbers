@@ -53,8 +53,19 @@ function tabs() {
 )}
 
 chrome.commands.onCommand.addListener(function(command) { 
-  enabled = true
+    if(enabled){
+        enabled = false;
+    } else{
+        enabled = true;
+    }
   tabs()
+})
+
+chrome.tabs.onUpdated.addListener(function(tab) { 
+  if (enabled) {
+    enabled = true
+    tabs()
+  }
 })
 chrome.tabs.onActivated.addListener(function(tab) { 
   if (enabled) {
@@ -62,6 +73,23 @@ chrome.tabs.onActivated.addListener(function(tab) {
     tabs()
   }
 })
+
+chrome.tabs.onRemoved.addListener(function(tab) { 
+  if (enabled) {
+    enabled = true
+    tabs()
+  }
+})
+
+chrome.tabs.onMoved.addListener(function(tab) { 
+  if (enabled) {
+    enabled = true
+    tabs()
+  }
+})
+
+
+
 chrome.runtime.onMessage.addListener(function(message, sender) {
   chrome.tabs.executeScript(message.id, { code: "document.title=".concat('"', indexTitle(message.index, message.title, total), '"') } )
 })
