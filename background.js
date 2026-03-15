@@ -9,10 +9,10 @@ function indexTitle(index, title, max) {
 
   if (enabled == false) { return originalTitle }
 
-    if (index > 7 && index == max-1) { 
+    if (index > 7 && index == max-1) {
         return "".concat("9".toString(), separator, originalTitle)
     }
-    else if (index > 7) { 
+    else if (index > 7) {
         if(title[0] === "9" && title[1] === "]"){
             return title.substring(2);
         } else{
@@ -25,28 +25,26 @@ function indexTitle(index, title, max) {
 }
 
 function tabs() {
-  chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
-    total = tabs.length
-    for (var i = 0; i < tabs.length; i++) {
-     chrome.tabs.executeScript(tabs[i].id, 
-         { code: "chrome.runtime.sendMessage({'index': ".concat(tabs[i].index, 
-             ", 'id': ", 
-             tabs[i].id, 
-             ", 'title': '", 
-             tabs[i].title, 
-             "' })") })
+  chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabList) {
+    total = tabList.length
+    for (var i = 0; i < tabList.length; i++) {
+      const newTitle = indexTitle(tabList[i].index, tabList[i].title, total)
+      chrome.scripting.executeScript({
+        target: { tabId: tabList[i].id },
+        func: (title) => { document.title = title },
+        args: [newTitle]
+      })
     }
-  }
-)}
+  })
+}
 
 function callbackTab(tab){
     if(enabled){
-        enabled = true;
         tabs()
     }
 }
 
-chrome.commands.onCommand.addListener(function(command) { 
+chrome.commands.onCommand.addListener(function(command) {
   enabled = enabled ? false : true;
   tabs()
 })
@@ -58,9 +56,3 @@ chrome.tabs.onActivated.addListener((tab) => callbackTab(tab));
 chrome.tabs.onRemoved.addListener((tab) => callbackTab(tab));
 
 chrome.tabs.onMoved.addListener((tab) => callbackTab(tab));
-
-
-
-chrome.runtime.onMessage.addListener(function(message, sender) {
-  chrome.tabs.executeScript(message.id, { code: "document.title=".concat('"', indexTitle(message.index, message.title, total), '"') } )
-})
