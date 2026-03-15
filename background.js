@@ -28,9 +28,11 @@ function tabs() {
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabList) {
     total = tabList.length
     for (var i = 0; i < tabList.length; i++) {
-      const newTitle = indexTitle(tabList[i].index, tabList[i].title, total)
+      const tab = tabList[i]
+      if (!tab.url || tab.url.startsWith("chrome://") || tab.url.startsWith("chrome-extension://") || tab.url.startsWith("about:")) continue
+      const newTitle = indexTitle(tab.index, tab.title, total)
       chrome.scripting.executeScript({
-        target: { tabId: tabList[i].id },
+        target: { tabId: tab.id },
         func: (title) => { document.title = title },
         args: [newTitle]
       })
