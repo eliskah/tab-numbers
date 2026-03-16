@@ -7,8 +7,11 @@ const executeScript = chrome.scripting
   ? (tabId, func, args) => chrome.scripting.executeScript({ target: { tabId }, func, args })
   : (tabId, func, args) => chrome.tabs.executeScript(tabId, { code: `(${func})(${args.map(JSON.stringify).join(',')})` })
 
-chrome.storage.local.get("enabled", (result) => {
-  if (result.enabled !== undefined) enabled = result.enabled
+const initPromise = new Promise(resolve => {
+  chrome.storage.local.get("enabled", (result) => {
+    if (result.enabled !== undefined) enabled = result.enabled
+    resolve()
+  })
 })
 
 function indexTitle(index, title, max) {
@@ -55,9 +58,11 @@ function tabs(removedTabId) {
 }
 
 function callbackTab(tab, action){
-    if(enabled){
-        tabs(action === "removed" ? tab : undefined)
-    }
+    initPromise.then(() => {
+        if(enabled){
+            tabs(action === "removed" ? tab : undefined)
+        }
+    })
 }
 
 chrome.commands.onCommand.addListener(function(command) {
