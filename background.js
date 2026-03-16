@@ -1,6 +1,11 @@
 var separator = "] "
 var total = 0
 var enabled = true
+var pendingRemovedId = undefined
+
+const executeScript = chrome.scripting
+  ? (tabId, func, args) => chrome.scripting.executeScript({ target: { tabId }, func, args })
+  : (tabId, func, args) => chrome.tabs.executeScript(tabId, { code: `(${func})(${args.map(JSON.stringify).join(',')})` })
 
 chrome.storage.local.get("enabled", (result) => {
   if (result.enabled !== undefined) enabled = result.enabled
@@ -28,25 +33,30 @@ function indexTitle(index, title, max) {
     }
 }
 
-function tabs() {
+function tabs(removedTabId) {
+  if (removedTabId !== undefined) pendingRemovedId = removedTabId
   chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabList) {
+    const removed = pendingRemovedId !== undefined ? tabList.find(t => t.id === pendingRemovedId) : null
+    if (removed) {
+      tabList = tabList
+        .filter(t => t.id !== pendingRemovedId)
+        .map(t => t.index > removed.index ? {...t, index: t.index - 1} : t)
+    } else {
+      pendingRemovedId = undefined
+    }
     total = tabList.length
     for (var i = 0; i < tabList.length; i++) {
       const tab = tabList[i]
       if (!tab.url || tab.url.startsWith("chrome://") || tab.url.startsWith("chrome-extension://") || tab.url.startsWith("about:")) continue
       const newTitle = indexTitle(tab.index, tab.title, total)
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: (title) => { document.title = title },
-        args: [newTitle]
-      })
+      executeScript(tab.id, (title) => { document.title = title }, [newTitle])
     }
   })
 }
 
-function callbackTab(tab){
+function callbackTab(tab, action){
     if(enabled){
-        tabs()
+        tabs(action === "removed" ? tab : undefined)
     }
 }
 
@@ -56,10 +66,10 @@ chrome.commands.onCommand.addListener(function(command) {
   tabs()
 })
 
-chrome.tabs.onUpdated.addListener((tab) => callbackTab(tab));
+chrome.tabs.onUpdated.addListener((tab) => callbackTab(tab, "updated"));
 
-chrome.tabs.onActivated.addListener((tab) => callbackTab(tab));
+chrome.tabs.onActivated.addListener((tab) => callbackTab(tab, "activated"));
 
-chrome.tabs.onRemoved.addListener((tab) => callbackTab(tab));
+chrome.tabs.onRemoved.addListener((tab) => callbackTab(tab, "removed"));
 
-chrome.tabs.onMoved.addListener((tab) => callbackTab(tab));
+chrome.tabs.onMoved.addListener((tab) => callbackTab(tab, "moved"));

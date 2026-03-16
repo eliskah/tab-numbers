@@ -14,9 +14,21 @@ Clone the repository:
 
     $ git clone https://github.com/eliskah/tab-numbers.git
 
+Then set up the manifest for your browser:
+
+**Chrome:**
+
+    $ cp manifest.chrome.json manifest.json
+
+**Firefox:**
+
+    $ cp manifest.firefox.json manifest.json
+
 ![Enable the extension in browser](./images/enable.png)
 
-In your Chromium Browser of choice, go to extensions settings (`settings > extensions` or go to `chrome://extensions`). Make sure you have activated **Developer mode**, then `Load unpacked extension..` and navigate to the extension folder.
+**Chrome:** go to `chrome://extensions`, enable **Developer mode**, click `Load unpacked` and select the extension folder.
+
+**Firefox:** go to `about:debugging`, click **This Firefox**, then **Load Temporary Add-on** and select the `manifest.json` file.
 
 ## Usage
 

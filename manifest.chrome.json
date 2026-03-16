@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+
+  "name": "Numbered Tabs",
+  "description": "See order of your open tabs to navigate easily",
+  "version": "0.1",
+
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "file://*/*",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands" : {
+    "toggle_title" : {
+      "suggested_key" : {
+        "default": "Alt+T"
+      },
+      "description": "Triggers title change"
+    }
+  }
+}
