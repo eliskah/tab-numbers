@@ -1,4 +1,4 @@
-# Chrome Extension tab-numbers
+# Browser Extension tab-numbers
 
 If you are used to **switch between open tabs in Google Chrome** using CMD/CTRL/ALT+number of tab (eg. `CMD+4` for tab number 4), you might be tired of visually counting the tabs you want to switch to.
 
@@ -7,6 +7,11 @@ With this extension active, this is what you get:
 ![Preview of tab-numbers in Chrome](./images/view.png)
 
 Use `ALT+T`/`Option+T` to toggle this extension on/off.
+
+## Support
+
+* Google Chrome
+* Mozilla Firefox
 
 ## Installation
 
