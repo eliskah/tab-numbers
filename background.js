@@ -2,6 +2,10 @@ var separator = "] "
 var total = 0
 var enabled = true
 
+chrome.storage.local.get("enabled", (result) => {
+  if (result.enabled !== undefined) enabled = result.enabled
+})
+
 function indexTitle(index, title, max) {
 
   var start = title.indexOf(separator) > -1 ? (title.indexOf(separator) + separator.length) : -1
@@ -47,7 +51,8 @@ function callbackTab(tab){
 }
 
 chrome.commands.onCommand.addListener(function(command) {
-  enabled = enabled ? false : true;
+  enabled = !enabled;
+  chrome.storage.local.set({ enabled })
   tabs()
 })
 
